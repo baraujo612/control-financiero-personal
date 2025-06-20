@@ -1,4 +1,18 @@
-<!DOCTYPE html>
+.paid-sub {
+            background: #d4edda !important;
+            border-radius: 8px;
+            padding: 10px !important;
+        }
+        
+        .payment-status {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
+        .paid-sub .payment-status {
+            color: #155724;
+        }<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -1167,21 +1181,86 @@
             const container = document.getElementById('paymentList');
             
             container.innerHTML = month.expenses.map(exp => {
-                const total = exp.type === 'categoria' ? calculateCategoryTotal(exp) : exp.amount;
-                
-                return `
-                    <div class="expense-item ${exp.paid ? 'paid' : ''}">
-                        <div class="expense-header">
-                            <div>
-                                <strong>${exp.name}</strong><br>
-                                <small>${formatMoney(total)} - ${exp.paid ? '✅ Pagado' : '⏳ Pendiente'}</small>
+                if (exp.type === 'categoria' && exp.subExpenses) {
+                    // Para categorías, mostrar sub-gastos individuales
+                    const paidSubExpenses = exp.subExpenses.filter(sub => sub.paid).length;
+                    const totalSubExpenses = exp.subExpenses.length;
+                    const categoryProgress = totalSubExpenses > 0 ? (paidSubExpenses / totalSubExpenses) * 100 : 0;
+                    const categoryTotal = calculateCategoryTotal(exp);
+                    const paidAmount = exp.subExpenses
+                        .filter(sub => sub.paid)
+                        .reduce((sum, sub) => sum + sub.amount, 0);
+                    
+                    return `
+                        <div class="expense-item categoria ${categoryProgress === 100 ? 'paid' : ''}">
+                            <div class="expense-header" data-toggle-category="${exp.id}">
+                                <div>
+                                    <strong>${exp.name}</strong><br>
+                                    <small>
+                                        ${formatMoney(categoryTotal)} - 
+                                        ${Math.round(categoryProgress)}% completado 
+                                        (${paidSubExpenses}/${totalSubExpenses} pagados)
+                                    </small>
+                                    <div class="progress-bar" style="margin-top: 8px;">
+                                        <div class="progress-fill" style="width: ${categoryProgress}%"></div>
+                                    </div>
+                                </div>
+                                <div class="expense-actions">
+                                    <button class="expand-btn" data-expand="${exp.id}">▶</button>
+                                    <button class="btn ${categoryProgress === 100 ? 'btn-success' : 'btn-warning'} btn-sm">
+                                        ${categoryProgress === 100 ? '✅ Completa' : '⏳ Parcial'}
+                                    </button>
+                                </div>
                             </div>
-                            <button class="btn ${exp.paid ? 'btn-danger' : 'btn-success'} btn-sm" data-toggle-payment="${exp.id}">
-                                ${exp.paid ? '↩️ Desmarcar' : '✅ Marcar'}
-                            </button>
+                            <div class="category-details" id="category-payment-${exp.id}">
+                                <h4>💰 Pagos individuales:</h4>
+                                ${exp.subExpenses.map(sub => `
+                                    <div class="sub-expense ${sub.paid ? 'paid-sub' : ''}">
+                                        <div class="sub-expense-info">
+                                            <h4>${sub.name}</h4>
+                                            <div class="amount">${formatMoney(sub.amount)}</div>
+                                            ${sub.notes ? `<div class="notes">${sub.notes}</div>` : ''}
+                                            <div class="payment-status">
+                                                ${sub.paid ? '✅ Pagado' : '⏳ Pendiente'}
+                                            </div>
+                                        </div>
+                                        <button class="btn ${sub.paid ? 'btn-danger' : 'btn-success'} btn-sm" 
+                                                data-toggle-sub-payment="${exp.id}-${sub.id}">
+                                            ${sub.paid ? '↩️ Desmarcar' : '✅ Marcar'}
+                                        </button>
+                                    </div>
+                                `).join('')}
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #6f42c1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <strong>Pagado: ${formatMoney(paidAmount)}</strong>
+                                        <strong>Restante: ${formatMoney(categoryTotal - paidAmount)}</strong>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm" 
+                                            data-mark-all-category="${exp.id}"
+                                            style="width: 100%;">
+                                        ${categoryProgress === 100 ? '↩️ Desmarcar Todos' : '✅ Marcar Todos'}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    // Para gastos simples, mantener funcionalidad original
+                    const total = exp.amount;
+                    return `
+                        <div class="expense-item ${exp.paid ? 'paid' : ''}">
+                            <div class="expense-header">
+                                <div>
+                                    <strong>${exp.name}</strong><br>
+                                    <small>${formatMoney(total)} - ${exp.paid ? '✅ Pagado' : '⏳ Pendiente'}</small>
+                                </div>
+                                <button class="btn ${exp.paid ? 'btn-danger' : 'btn-success'} btn-sm" data-toggle-payment="${exp.id}">
+                                    ${exp.paid ? '↩️ Desmarcar' : '✅ Marcar'}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
             }).join('');
 
             updateProgress();
@@ -1189,9 +1268,22 @@
 
         function updateProgress() {
             const month = getCurrentMonth();
-            const total = month.expenses.length;
-            const paid = month.expenses.filter(exp => exp.paid).length;
-            const percentage = total > 0 ? (paid / total) * 100 : 0;
+            let totalItems = 0;
+            let paidItems = 0;
+
+            month.expenses.forEach(exp => {
+                if (exp.type === 'categoria' && exp.subExpenses) {
+                    // Para categorías, contar sub-gastos individuales
+                    totalItems += exp.subExpenses.length;
+                    paidItems += exp.subExpenses.filter(sub => sub.paid).length;
+                } else {
+                    // Para gastos simples
+                    totalItems += 1;
+                    if (exp.paid) paidItems += 1;
+                }
+            });
+
+            const percentage = totalItems > 0 ? (paidItems / totalItems) * 100 : 0;
 
             document.getElementById('paymentProgress').style.width = percentage + '%';
             document.getElementById('paymentPercentage').textContent = Math.round(percentage) + '%';
@@ -1593,15 +1685,15 @@
                 return;
             }
             
-            if (target.hasAttribute('data-toggle-category')) {
+            if (target.hasAttribute('data-toggle-category') && target.closest('#seguimiento')) {
                 const id = parseInt(target.getAttribute('data-toggle-category'));
-                toggleCategory(id);
+                toggleCategoryPayment(id);
                 return;
             }
             
-            if (target.hasAttribute('data-expand')) {
+            if (target.hasAttribute('data-expand') && target.closest('#seguimiento')) {
                 const id = parseInt(target.getAttribute('data-expand'));
-                toggleCategory(id);
+                toggleCategoryPayment(id);
                 return;
             }
             
@@ -1626,6 +1718,18 @@
             if (target.hasAttribute('data-toggle-payment')) {
                 const id = parseInt(target.getAttribute('data-toggle-payment'));
                 togglePayment(id);
+                return;
+            }
+            
+            if (target.hasAttribute('data-toggle-sub-payment')) {
+                const [expId, subId] = target.getAttribute('data-toggle-sub-payment').split('-').map(Number);
+                toggleSubPayment(expId, subId);
+                return;
+            }
+            
+            if (target.hasAttribute('data-mark-all-category')) {
+                const id = parseInt(target.getAttribute('data-mark-all-category'));
+                toggleAllCategoryPayments(id);
                 return;
             }
             
@@ -1667,6 +1771,21 @@
         function toggleCategory(id) {
             const details = document.getElementById(`category-${id}`);
             const btn = document.querySelector(`[data-expand="${id}"]`);
+            
+            if (details && btn) {
+                if (details.classList.contains('expanded')) {
+                    details.classList.remove('expanded');
+                    btn.classList.remove('expanded');
+                } else {
+                    details.classList.add('expanded');
+                    btn.classList.add('expanded');
+                }
+            }
+        }
+
+        function toggleCategoryPayment(id) {
+            const details = document.getElementById(`category-payment-${id}`);
+            const btn = document.querySelector(`#seguimiento [data-expand="${id}"]`);
             
             if (details && btn) {
                 if (details.classList.contains('expanded')) {
@@ -1731,8 +1850,49 @@
         function togglePayment(id) {
             const month = getCurrentMonth();
             const expense = month.expenses.find(exp => exp.id === id);
-            if (expense) {
+            if (expense && expense.type !== 'categoria') {
                 expense.paid = !expense.paid;
+                updatePaymentList();
+            }
+        }
+
+        function toggleSubPayment(expenseId, subId) {
+            const month = getCurrentMonth();
+            const expense = month.expenses.find(exp => exp.id === expenseId);
+            if (expense && expense.subExpenses) {
+                const subExpense = expense.subExpenses.find(sub => sub.id === subId);
+                if (subExpense) {
+                    subExpense.paid = !subExpense.paid;
+                    
+                    // Auto-actualizar el estado de la categoría padre
+                    const allPaid = expense.subExpenses.every(sub => sub.paid);
+                    const nonePaid = expense.subExpenses.every(sub => !sub.paid);
+                    
+                    if (allPaid) {
+                        expense.paid = true;
+                    } else if (nonePaid) {
+                        expense.paid = false;
+                    } else {
+                        expense.paid = false; // Parcialmente pagado
+                    }
+                    
+                    updatePaymentList();
+                }
+            }
+        }
+
+        function toggleAllCategoryPayments(expenseId) {
+            const month = getCurrentMonth();
+            const expense = month.expenses.find(exp => exp.id === expenseId);
+            if (expense && expense.subExpenses) {
+                const allPaid = expense.subExpenses.every(sub => sub.paid);
+                
+                // Si todos están pagados, desmarcar todos. Si no, marcar todos.
+                expense.subExpenses.forEach(sub => {
+                    sub.paid = !allPaid;
+                });
+                
+                expense.paid = !allPaid;
                 updatePaymentList();
             }
         }
@@ -1823,4 +1983,3 @@
     </script>
 </body>
 </html>
-Primera version de la app 
