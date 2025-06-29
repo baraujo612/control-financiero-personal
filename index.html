@@ -1,4 +1,107 @@
-.paid-sub {
+// Estado global con datos de ejemplo actualizados
+        let appData = {
+            currentMonth: 6, // Julio (mes 6)
+            currentSubExpenses: [],
+            lastPdfData: null,
+            notificationsEnabled: false,
+            months: {
+                5: {
+                    totalUSD: 1000,
+                    tipoCambio: 1200,
+                    expenses: [
+                        { id: 1, name: 'La Comuna', amount: 155000, type: 'variable', paid: false },
+                        { 
+                            id: 2, 
+                            name: 'La Esperanza', 
+                            type: 'categoria', 
+                            paid: false,
+                            subExpenses: [
+                                { id: 21, name: 'Edenor', amount: 175000, notes: 'Factura de electricidad mensual' },
+                                { id: 22, name: 'Arba', amount: 40000, notes: 'Impuesto provincial' },
+                                { id: 23, name: 'Expensas', amount: 415000, notes: 'Gastos comunes del edificio' },
+                                { id: 24, name: 'Muni Rodriguez', amount: 200000, notes: 'Tasas municipales' },
+                                { id: 25, name: 'Canon obra', amount: 415000, notes: 'Pago por obra en curso' },
+                                { id: 26, name: 'Gas', amount: 60000, notes: 'Servicio de gas natural' }
+                            ]
+                        },
+                        { id: 3, name: 'Tarjeta Chivi x2', amount: 118000, type: 'variable', paid: false },
+                        { id: 4, name: 'Tarjeta Bauti', amount: 45000, type: 'variable', paid: false },
+                        { id: 5, name: 'Fede PF', amount: 20000, type: 'variable', paid: false },
+                        { id: 6, name: 'Teo', amount: 50000, type: 'fijo', paid: false },
+                        { 
+                            id: 7, 
+                            name: 'Cesar', 
+                            type: 'categoria', 
+                            paid: false,
+                            subExpenses: [
+                                { id: 71, name: 'Sueldo', amount: 705000, notes: 'Salario mensual' },
+                                { id: 72, name: 'Materiales', amount: 25000, notes: 'Compra de herramientas y materiales' },
+                                { id: 73, name: 'Gladys', amount: 40000, notes: 'Pago servicios adicionales' },
+                                { id: 74, name: 'Extras', amount: 55000, notes: 'Horas extra y bonificaciones' },
+                                { id: 75, name: 'TRACTOR+SILLAS (2/12 - 2/2)', amount: -175000, notes: 'Descuento por equipamiento' }
+                            ]
+                        },
+                        { id: 8, name: 'Celes', amount: 28000, type: 'fijo', paid: false },
+                        { id: 9, name: 'Super', amount: 40000, type: 'variable', paid: false },
+                        { id: 10, name: 'Comida perros', amount: 120000, type: 'variable', paid: false },
+                        { id: 11, name: 'Berna', amount: 33500, type: 'variable', paid: false },
+                        { id: 12, name: 'Silvina', amount: 13000, type: 'variable', paid: false }
+                    ]
+                },
+                6: { // JULIO - MES QUE SE TE BORRÓ
+                    totalUSD: 1200,
+                    tipoCambio: 1300,
+                    expenses: [
+                        { id: 101, name: 'La Comuna', amount: 165000, type: 'variable', paid: false },
+                        { 
+                            id: 102, 
+                            name: 'La Esperanza', 
+                            type: 'categoria', 
+                            paid: false,
+                            subExpenses: [
+                                { id: 201, name: 'Edenor', amount: 185000, notes: 'Electricidad julio - subió por calefacción', paid: false },
+                                { id: 202, name: 'Arba', amount: 42000, notes: 'Impuesto provincial julio', paid: false },
+                                { id: 203, name: 'Expensas', amount: 435000, notes: 'Gastos comunes julio', paid: false },
+                                { id: 204, name: 'Muni Rodriguez', amount: 210000, notes: 'Tasas municipales julio', paid: false },
+                                { id: 205, name: 'Canon obra', amount: 415000, notes: 'Pago por obra julio', paid: false },
+                                { id: 206, name: 'Gas', amount: 85000, notes: 'Gas natural julio - más caro por frío', paid: false }
+                            ]
+                        },
+                        { 
+                            id: 103, 
+                            name: 'Tarjeta JUAN BAUTISTA ARAUJO MULLER', 
+                            type: 'categoria', 
+                            paid: false,
+                            subExpenses: [
+                                { id: 301, name: 'MercadoPago', amount: 850000, notes: '45 operaciones - compras varias', paid: false },
+                                { id: 302, name: 'Netflix', amount: 13499, notes: 'Suscripción mensual', paid: false },
+                                { id: 303, name: 'Starlink', amount: 87500, notes: 'Internet satelital', paid: false },
+                                { id: 304, name: 'Apple Services', amount: 12500, notes: 'iCloud y App Store', paid: false },
+                                { id: 305, name: 'Google Services', amount: 8500, notes: 'YouTube Premium y Google One', paid: false },
+                                { id: 306, name: 'Booking.com', amount: 691300, notes: 'Reservas de hotel Europa', paid: false },
+                                { id: 307, name: 'Uber', amount: 105000, notes: 'Viajes en Europa', paid: false },
+                                { id: 308, name: 'Veterinaria San Benito', amount: 176000, notes: 'Atención veterinaria', paid: false },
+                                { id: 309, name: 'Despegar', amount: 434129, notes: '            // Month dropdown
+            document.getElementById('monthDropdown').addEventListener('change', (e) => {
+                const monthIndex = parseInt(e.target.value);
+                selectMonth(monthIndex);
+            });        .notification-status {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            flex-wrap: wrap;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .notification-icon {
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+        }        .paid-sub {
             background: #d4edda !important;
             border-radius: 8px;
             padding: 10px !important;
@@ -55,10 +158,13 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 20px 15px;
+            padding: 15px;
             margin-bottom: 20px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .header h1 {
@@ -70,53 +176,49 @@
             margin-bottom: 10px;
         }
         
-        .notification-status {
+        .header-controls {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
-            margin: 10px 0;
-            font-size: 13px;
+            gap: 15px;
             flex-wrap: wrap;
+            margin-top: 15px;
         }
         
-        .notification-icon {
-            padding: 4px 8px;
-            border-radius: 15px;
-            font-size: 11px;
+        .month-selector-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .month-dropdown {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            background: white;
+            color: #333;
             font-weight: 600;
-        }
-        
-        .month-selector {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin: 15px 0;
-        }
-        
-        .month-btn {
-            padding: 10px 8px;
-            border: none;
-            border-radius: 20px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 12px;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            padding-right: 45px;
         }
         
-        .month-btn:active {
-            transform: scale(0.95);
+        .month-dropdown:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
-        .month-btn.active {
-            background: linear-gradient(135deg, #764ba2, #667eea);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        .month-dropdown:active {
+            transform: scale(0.98);
         }
         
         .tabs {
@@ -488,23 +590,28 @@
             }
             
             .header {
-                padding: 15px 12px;
+                padding: 12px;
                 margin-bottom: 15px;
             }
             
             .header h1 {
                 font-size: 1.5rem;
+                margin-bottom: 12px;
             }
             
-            .month-selector {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 6px;
+            .header-controls {
+                flex-direction: column;
+                gap: 10px;
             }
             
-            .month-btn {
-                padding: 8px 4px;
-                font-size: 11px;
-                min-height: 40px;
+            .month-selector-wrapper,
+            .notification-status {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .notification-status {
+                justify-content: center;
             }
             
             .tabs {
@@ -575,16 +682,20 @@
                 grid-template-columns: repeat(5, 1fr);
             }
             
-            .month-selector {
-                grid-template-columns: repeat(6, 1fr);
-            }
-            
             .summary-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
             
             .grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header-controls {
+                flex-direction: row;
+            }
+            
+            .month-selector-wrapper {
+                max-width: 200px;
             }
         }
         
@@ -600,6 +711,40 @@
         .notification-disabled {
             background: #f8d7da;
             color: #721c24;
+        }
+        
+        .notification-status {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            flex-wrap: wrap;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .notification-icon {
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .paid-sub {
+            background: #d4edda !important;
+            border-radius: 8px;
+            padding: 10px !important;
+        }
+        
+        .payment-status {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
+        .paid-sub .payment-status {
+            color: #155724;
         }
         
         .tab-content {
@@ -817,24 +962,28 @@
     <div class="container">
         <div class="header">
             <h1>💰 Control Financiero Personal</h1>
-            <div class="notification-status">
-                <span>🔔 Notificaciones:</span>
-                <span class="notification-icon" id="notificationStatus">Verificando...</span>
-                <button class="btn btn-sm btn-primary" id="activateNotificationsBtn">Activar</button>
-            </div>
-            <div class="month-selector">
-                <button class="month-btn" data-month="0">Enero</button>
-                <button class="month-btn" data-month="1">Febrero</button>
-                <button class="month-btn" data-month="2">Marzo</button>
-                <button class="month-btn" data-month="3">Abril</button>
-                <button class="month-btn" data-month="4">Mayo</button>
-                <button class="month-btn active" data-month="5">Junio</button>
-                <button class="month-btn" data-month="6">Julio</button>
-                <button class="month-btn" data-month="7">Agosto</button>
-                <button class="month-btn" data-month="8">Septiembre</button>
-                <button class="month-btn" data-month="9">Octubre</button>
-                <button class="month-btn" data-month="10">Noviembre</button>
-                <button class="month-btn" data-month="11">Diciembre</button>
+            <div class="header-controls">
+                <div class="month-selector-wrapper">
+                    <select class="month-dropdown" id="monthDropdown">
+                        <option value="0">📅 Enero 2025</option>
+                        <option value="1">📅 Febrero 2025</option>
+                        <option value="2">📅 Marzo 2025</option>
+                        <option value="3">📅 Abril 2025</option>
+                        <option value="4">📅 Mayo 2025</option>
+                        <option value="6" selected>📅 Julio 2025</option>
+                        <option value="6">📅 Julio 2025</option>
+                        <option value="7">📅 Agosto 2025</option>
+                        <option value="8">📅 Septiembre 2025</option>
+                        <option value="9">📅 Octubre 2025</option>
+                        <option value="10">📅 Noviembre 2025</option>
+                        <option value="11">📅 Diciembre 2025</option>
+                    </select>
+                </div>
+                <div class="notification-status">
+                    <span>🔔</span>
+                    <span class="notification-icon" id="notificationStatus">Verificando...</span>
+                    <button class="btn btn-sm btn-primary" id="activateNotificationsBtn">Activar</button>
+                </div>
             </div>
         </div>
 
@@ -1003,6 +1152,18 @@
                     <small>Notificaciones los días 5, 10 y 15 de cada mes</small>
                 </div>
                 
+                <h3 style="margin-top: 30px;">💾 Respaldo de Datos</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                    <button class="btn btn-success" onclick="exportData()">📥 Descargar Backup</button>
+                    <label class="btn btn-warning" style="margin: 0; text-align: center;">
+                        📤 Cargar Backup
+                        <input type="file" accept=".json" onchange="importData(event)" style="display: none;">
+                    </label>
+                </div>
+                <small style="color: #666; font-size: 12px;">
+                    💡 Descarga un backup de tus datos regularmente por seguridad
+                </small>
+                
                 <h3 style="margin-top: 30px;">💾 Datos</h3>
                 <button class="btn btn-danger" id="resetDataBtn">🔄 Resetear Todos los Datos</button>
                 <p style="margin-top: 15px; color: #666; font-size: 14px;">
@@ -1078,6 +1239,97 @@
             }
         };
 
+        // ============ SISTEMA DE PERSISTENCIA DE DATOS ============
+        
+        function saveData() {
+            try {
+                localStorage.setItem('financialAppData', JSON.stringify(appData));
+                // Guardado silencioso - no mostrar alertas
+            } catch (error) {
+                console.error('❌ Error guardando datos:', error);
+                // Solo mostrar error si realmente falla
+                showAlert('⚠️ Error guardando datos. Revisa el espacio de almacenamiento.');
+            }
+        }
+
+        function loadData() {
+            try {
+                const savedData = localStorage.getItem('financialAppData');
+                if (savedData) {
+                    const parsed = JSON.parse(savedData);
+                    // Validar estructura básica
+                    if (parsed && parsed.months && typeof parsed.currentMonth === 'number') {
+                        appData = { ...appData, ...parsed };
+                        // Carga silenciosa - no mostrar alertas
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error cargando datos:', error);
+                // Solo mostrar error crítico
+                showAlert('⚠️ Error cargando datos guardados. Iniciando con datos por defecto.');
+            }
+            return false;
+        }
+
+        function exportData() {
+            try {
+                const dataStr = JSON.stringify(appData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `control-financiero-backup-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                showAlert('✅ Backup descargado exitosamente');
+            } catch (error) {
+                console.error('❌ Error exportando datos:', error);
+                showAlert('❌ Error creando backup');
+            }
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // Validar estructura
+                    if (importedData && importedData.months && typeof importedData.currentMonth === 'number') {
+                        appData = { ...appData, ...importedData };
+                        saveData(); // Guardar inmediatamente
+                        
+                        // Actualizar UI
+                        document.getElementById('monthDropdown').value = appData.currentMonth;
+                        updateSummary();
+                        updateExpensesList();
+                        updatePaymentList();
+                        
+                        showAlert('✅ Datos importados exitosamente');
+                    } else {
+                        showAlert('❌ Archivo de backup inválido');
+                    }
+                } catch (error) {
+                    console.error('❌ Error importando datos:', error);
+                    showAlert('❌ Error leyendo el archivo de backup');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Auto-guardar después de cada cambio importante
+        function autoSave() {
+            saveData();
+        }
+        
         // ============ FUNCIONES CORE ============
         
         function getCurrentMonth() {
@@ -1087,6 +1339,7 @@
                     tipoCambio: 1200,
                     expenses: []
                 };
+                autoSave(); // Guardar cuando se crea un nuevo mes
             }
             return appData.months[appData.currentMonth];
         }
@@ -1379,6 +1632,7 @@
             
             updateExpensesList();
             updateSummary();
+            autoSave(); // 💾 GUARDAR AUTOMÁTICAMENTE
             showAlert('✅ Gasto agregado correctamente');
         }
 
@@ -1654,6 +1908,7 @@
             updateExpensesList();
             updateSummary();
             updatePaymentList();
+            autoSave(); // 💾 GUARDAR AUTOMÁTICAMENTE
             
             showAlert('✅ Tarjeta agregada exitosamente como gasto de categoría');
             showTab('planificacion');
@@ -1759,9 +2014,8 @@
         function selectMonth(monthIndex) {
             appData.currentMonth = monthIndex;
             
-            document.querySelectorAll('.month-btn').forEach((btn, index) => {
-                btn.classList.toggle('active', index === monthIndex);
-            });
+            // Actualizar dropdown
+            document.getElementById('monthDropdown').value = monthIndex;
             
             updateSummary();
             updateExpensesList();
@@ -1805,6 +2059,7 @@
                 updateExpensesList();
                 updateSummary();
                 updatePaymentList();
+                autoSave(); // 💾 GUARDAR AUTOMÁTICAMENTE
             }
         }
 
@@ -1816,6 +2071,7 @@
                 updateExpensesList();
                 updateSummary();
                 updatePaymentList();
+                autoSave(); // 💾 GUARDAR AUTOMÁTICAMENTE
             }
         }
 
@@ -1839,6 +2095,7 @@
                 updateExpensesList();
                 updateSummary();
                 updatePaymentList();
+                autoSave(); // 💾 GUARDAR AUTOMÁTICAMENTE
             }
         }
 
@@ -1900,6 +2157,9 @@
         // ============ INITIALIZATION ============
 
         function init() {
+            // 🔄 CARGAR DATOS GUARDADOS PRIMERO (silencioso)
+            loadData();
+            
             // Event listeners
             document.addEventListener('click', handleClick);
             
@@ -1909,6 +2169,7 @@
                 month.totalUSD = parseFloat(document.getElementById('inputTotalUSD').value) || 0;
                 month.tipoCambio = parseFloat(document.getElementById('inputTipoCambio').value) || 1200;
                 updateSummary();
+                autoSave(); // 💾 GUARDAR AUTOMÁTICAMENTE
                 showAlert('✅ Ingresos actualizados correctamente');
             });
             
@@ -1926,6 +2187,7 @@
                     appData.months = {};
                     appData.currentSubExpenses = [];
                     appData.lastPdfData = null;
+                    localStorage.removeItem('financialAppData'); // Limpiar localStorage también
                     selectMonth(5);
                     document.getElementById('pdfResults').style.display = 'none';
                     showAlert('🔄 Datos reseteados correctamente');
@@ -1969,13 +2231,17 @@
                 }
             });
             
-            // Initialize UI
+            // Initialize UI con datos cargados
             checkNotificationPermission();
             document.getElementById('enableNotifications').checked = appData.notificationsEnabled;
+            document.getElementById('monthDropdown').value = appData.currentMonth; // Asegurar que el dropdown esté sincronizado
             updateSummary();
             updateExpensesList();
             updatePaymentList();
             toggleCategoryForm();
+            
+            // Auto-guardar cada 30 segundos como medida extra de seguridad
+            setInterval(autoSave, 30000);
         }
 
         // Start the app
